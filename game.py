@@ -51,17 +51,15 @@ def make_move(event, canvas):
     x, y = event.x, event.y
     col = x // cells
     
-    for r in range(BOARD_ROWS-1, -1):
+    for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
             draw_mark(canvas, r, col)
             current_player = 'O' if current_player == 'X' else 'X'
             break
-
-        else:
-            r += 1
         
-
+        
+        
 
 name_label = tk.Label(root, text="Enter your name:")
 name_entry = tk.Entry(root, textvariable=name)
