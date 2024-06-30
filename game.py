@@ -15,7 +15,7 @@ root.title("Connect 4")
 name = tk.StringVar()
 scolor = ""
 ocolor = ""
-current_player = name
+current_player = None
 color_count = 0
 board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 
@@ -23,8 +23,9 @@ board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 
 
 def start_game():
+    global current_player, scolor
     save_name()
-    global scolor
+    current_player = name.get()  # Set the current player to the player's name
     for widget in root.winfo_children():
         widget.destroy()
     draw_board()
@@ -68,11 +69,12 @@ def make_move(event, canvas):
             else:
                 current_player = 'O' if current_player == name else name
             break
-        
+    
+
+ 
 def save_name():
     global name
-    name = name_entry.get()
-    #name_field.delete(0, tk.END)
+    name.set(name_entry.get())
         
 
 def draw_game():
