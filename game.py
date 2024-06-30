@@ -95,12 +95,18 @@ def check_winner():
             if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] != '':
                 return True
 
-    # Diagonals
+    # Diagonal1
     for i in range(BOARD_ROWS - 3):
         for j in range(BOARD_COLS - 3):
             if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] != '':
                 return True
-    
+
+    # Diagonal2
+    for i in range(3, BOARD_ROWS):
+        for j in range(BOARD_COLS - 3):
+            if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] != '':
+                return True
+            
     return False
     
 
