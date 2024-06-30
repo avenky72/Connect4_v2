@@ -46,28 +46,27 @@ def set_color(color):
 def draw_mark(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
-    if current_player == name:
+    if current_player == name.get():
         canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=scolor, width=5)
     else:
         canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=ocolor, width=5)
 
-
-
 def make_move(event, canvas):
     global current_player
-    x, y = event.x, event.y
+    x = event.x
     col = x // cells
-    
+
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
             draw_mark(canvas, r, col)
             if check_winner():
                 winner()
+                return
             elif draw_game():
                 draw()
-            else:
-                current_player = 'O' if current_player == name else name
+                return
+            current_player = name.get() if current_player != name.get() else 'Computer'
             break
     
 
@@ -114,7 +113,7 @@ name_entry.pack(padx=10, pady=10)
 #name_field.pack(padx=5, pady=5)
 
 
-color_label = tk.Label(root, text="Choose what color you wish to play as: ")
+color_label = tk.Label(root, text="Choose what color you wish to play as: \n The first click is your's and the second is the computer. ")
 color_label.pack(padx=10, pady=10)
 
 
@@ -135,7 +134,10 @@ start_button.pack(padx=10, pady=10)
 
 
 def winner():
-    winner_label = tk.Label(root, text=f"Player {current_player} wins!", font=('arial', 20, 'bold'))
+    if current_player == "Computer":
+        winner_label = tk.Label(root, text=f"Computer Wins", font=('arial', 20, 'bold'))
+    elif current_player != "Computer":
+        winner_label = tk.Label(root, text=f"{name.get()} wins!", font=('arial', 20, 'bold'))
     winner_label.pack(pady=20)
     
 
