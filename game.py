@@ -61,6 +61,34 @@ def make_move(event, canvas):
         
         
 
+def draw_game():
+    if not any('' in row for row in board) and not check_winner():
+        return True
+    return False
+
+
+def check_winner():
+    # Hotdog
+    for i in range(BOARD_ROWS):
+        for j in range(BOARD_COLS - 3):
+            if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] != '':
+                return True
+
+    # Hamburger
+    for j in range(BOARD_COLS):
+        for i in range(BOARD_ROWS - 3):
+            if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] != '':
+                return True
+
+    # Diagonals
+    for i in range(BOARD_ROWS - 3):
+        for j in range(BOARD_COLS - 3):
+            if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] != '':
+                return True
+    
+    return False
+    
+
 name_label = tk.Label(root, text="Enter your name:")
 name_entry = tk.Entry(root, textvariable=name)
 name_label.pack(padx=10, pady=10)
