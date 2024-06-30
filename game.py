@@ -58,7 +58,9 @@ def draw_mark(canvas, row, col):
 def make_move(event, canvas):
     global current_player
     x = event.x
+    #y = event.y
     col = x // cells
+    #row = y // cells
 
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
@@ -89,10 +91,29 @@ def draw_game():
 
 
 
-
-def minimax(board, depth, alpha, beta, is_maximizing_player):
-    if check_winner():
+#might need to
+def minimax(player, state, alpha, beta):
+    #global current_player
+    #x = event.x
+    #y = event.y
+    #col = x // cells
+    #row = y // cells
+    if check_winner(player) == True:
         return 1
+    elif check_winner(player) == False:
+        return -1
+    elif draw_game():
+        return 0
+    
+    if current_player == "Computer":
+        best_score = float('-inf')
+        #find a way to loop through each empty space in board
+        # this is going to have to be re-written as a nested for loop or smt
+        for cell in board and cell == '':
+            board[row][col] = current_player
+            draw_mark(canvas, row, col)
+            #make_move(event, canvas)
+            
     
     return None
 
