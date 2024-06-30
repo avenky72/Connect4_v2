@@ -43,6 +43,7 @@ def set_color(color):
         color_count += 1
 
 
+
 def draw_mark(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
@@ -50,6 +51,9 @@ def draw_mark(canvas, row, col):
         canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=scolor, width=5)
     else:
         canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=ocolor, width=5)
+
+
+
 
 def make_move(event, canvas):
     global current_player
@@ -70,11 +74,12 @@ def make_move(event, canvas):
             break
     
 
- 
+
 def save_name():
     global name
     name.set(name_entry.get())
         
+
 
 def draw_game():
     if not any('' in row for row in board) and not check_winner():
@@ -82,6 +87,22 @@ def draw_game():
     return False
 
 
+
+
+
+def minimax(board, depth, alpha, beta, is_maximizing_player):
+    if check_winner():
+        return 1
+    
+    return None
+
+
+
+
+
+# Update check_winner(player) to return true if player turn and player winner
+# Do this by checking if the pieces in row are the current_player's color or not
+# So if 4 in a row but not the curr_p's color --> lose, if it is the curr_p's color --> win
 def check_winner():
     # Hotdog
     for i in range(BOARD_ROWS):
@@ -109,6 +130,7 @@ def check_winner():
             
     return False
     
+
 
 name_label = tk.Label(root, text="Enter your name:")
 name_entry = tk.Entry(root, textvariable=name)
