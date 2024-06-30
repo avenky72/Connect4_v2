@@ -14,35 +14,41 @@ root.title("Connect 4")
 # Display name later
 name = tk.StringVar()
 scolor = ""
-current_player = 'X'
+ocolor = ""
+current_player = name
+color_count = 0
 board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 
 
 
 
 def start_game():
+    save_name()
     global scolor
     for widget in root.winfo_children():
         widget.destroy()
-
     draw_board()
 
 
 
 
 def set_color(color):
-# Set background color based on user's choise
-    global scolor
-    scolor = color
+    global scolor, ocolor, color_count
+    if color_count == 0:
+        scolor = color
+        color_count += 1
+    elif color_count == 1:
+        ocolor = color
+        color_count += 1
 
 
 def draw_mark(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
-    if current_player == 'X':
+    if current_player == name:
         canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=scolor, width=5)
     else:
-        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline="black", width=5)
+        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=ocolor, width=5)
 
 
 
@@ -60,10 +66,13 @@ def make_move(event, canvas):
             elif draw_game():
                 draw()
             else:
-                current_player = 'O' if current_player == 'X' else 'X'
+                current_player = 'O' if current_player == name else name
             break
         
-        
+def save_name():
+    global name
+    name = name_entry.get()
+    #name_field.delete(0, tk.END)
         
 
 def draw_game():
@@ -96,8 +105,12 @@ def check_winner():
 
 name_label = tk.Label(root, text="Enter your name:")
 name_entry = tk.Entry(root, textvariable=name)
+#name_field = tk.Entry(root, bg="SeaGreen1")
+
 name_label.pack(padx=10, pady=10)
 name_entry.pack(padx=10, pady=10)
+#name_field.pack(padx=5, pady=5)
+
 
 color_label = tk.Label(root, text="Choose what color you wish to play as: ")
 color_label.pack(padx=10, pady=10)
