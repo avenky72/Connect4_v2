@@ -55,7 +55,12 @@ def make_move(event, canvas):
         if board[r][col] == '':
             board[r][col] = current_player
             draw_mark(canvas, r, col)
-            current_player = 'O' if current_player == 'X' else 'X'
+            if check_winner():
+                winner()
+            elif draw_game():
+                draw()
+            else:
+                current_player = 'O' if current_player == 'X' else 'X'
             break
         
         
@@ -113,6 +118,16 @@ white_button.pack(padx=5, pady=5)
 start_button = tk.Button(root, font=('arial', 15, 'bold'), text="Start Game", bg="black", fg="green", command=start_game)
 start_button.pack(padx=10, pady=10)
 
+
+def winner():
+    winner_label = tk.Label(root, text=f"Player {current_player} wins!", font=('arial', 20, 'bold'))
+    winner_label.pack(pady=20)
+    
+
+
+def draw():
+    winner_label = tk.Label(root, text=f"DRAW GAME", font=('arial', 20, 'bold'))
+    winner_label.pack(pady=20)
 
 
 
