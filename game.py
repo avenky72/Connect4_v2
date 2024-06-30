@@ -14,6 +14,8 @@ root.title("Connect 4")
 # Display name later
 name = tk.StringVar()
 scolor = ""
+current_player = 'X'
+board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 
 
 
@@ -34,10 +36,35 @@ def set_color(color):
     scolor = color
 
 
+def draw_mark(canvas, row, col):
+    x_center = col * cells + cells // 2
+    y_center = row * cells + cells // 2
+    if current_player == 'X':
+        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=scolor, width=5)
+    else:
+        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline="black", width=5)
+
+
+
+def make_move(event, canvas):
+    global current_player
+    x, y = event.x, event.y
+    col = x // cells
+    
+    for r in range(BOARD_ROWS-1, -1):
+        if board[r][col] == '':
+            board[r][col] = current_player
+            draw_mark(canvas, r, col)
+            current_player = 'O' if current_player == 'X' else 'X'
+            break
+
+        else:
+            r += 1
+        
 
 
 name_label = tk.Label(root, text="Enter your name:")
-name_entry = tk.Entry(root, textvariable=player_name)
+name_entry = tk.Entry(root, textvariable=name)
 name_label.pack(padx=10, pady=10)
 name_entry.pack(padx=10, pady=10)
 
@@ -75,6 +102,8 @@ def draw_board():
 
     for j in range(1, BOARD_COLS):
         canvas.create_line(j * cells, 0, j * cells, canvas_height, fill="black", width=5)
+        
+    canvas.bind("<Button-1>", lambda event: make_move(event, canvas))
 
 
 
