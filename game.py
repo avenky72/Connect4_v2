@@ -44,7 +44,7 @@ def set_color(color):
 
 
 
-def draw_mark(canvas, row, col):
+def draw_token(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
     if current_player == name.get():
@@ -65,7 +65,7 @@ def make_move(event, canvas):
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
-            draw_mark(canvas, r, col)
+            draw_token(canvas, r, col)
             if check_winner():
                 winner()
                 return
@@ -91,16 +91,17 @@ def draw_game():
 
 
 
-#might need to
-def minimax(player, state, alpha, beta):
+#might need to change up a lot of current functions
+def minimax(event, canvas, board, depth, alpha, beta, player):
     #global current_player
-    #x = event.x
-    #y = event.y
-    #col = x // cells
-    #row = y // cells
-    if check_winner(player) == True:
+    x = event.x
+    y = event.y
+    col = x // cells
+    row = y // cells
+    if check_winner("Computer") == True:
         return 1
-    elif check_winner(player) == False:
+    # Doesn't make sense since the current player will be the computer
+    elif check_winner(name.get()) == True:
         return -1
     elif draw_game():
         return 0
@@ -111,11 +112,41 @@ def minimax(player, state, alpha, beta):
         # this is going to have to be re-written as a nested for loop or smt
         for cell in board and cell == '':
             board[row][col] = current_player
-            draw_mark(canvas, row, col)
-            #make_move(event, canvas)
+            draw_token(canvas, row, col)
+            make_move(event, canvas)
+            score = minimax(event, depth + 1, alpha, beta, False)
             
     
     return None
+
+"""
+might need to change up a lot of current functions
+def minimax(event, canvas, board, depth, alpha, beta):
+    #global current_player
+    x = event.x
+    y = event.y
+    col = x // cells
+    row = y // cells
+    if current_player == "Computer" and check_winner() == True:
+        return 1
+    # Doesn't make sense since the current player will be the computer
+    elif current_player == name.get() and check_winner() == True:
+        return -1
+    elif draw_game():
+        return 0
+    
+    if current_player == "Computer":
+        best_score = float('-inf')
+        #find a way to loop through each empty space in board
+        # this is going to have to be re-written as a nested for loop or smt
+        for cell in board and cell == '':
+            board[row][col] = current_player
+            draw_token(canvas, row, col)
+            make_move(event, canvas)
+            score = minimax(event, depth + 1, alpha, beta, False)
+            
+    
+    return None"""
 
 
 
@@ -124,32 +155,61 @@ def minimax(player, state, alpha, beta):
 # Update check_winner(player) to return true if player turn and player winner
 # Do this by checking if the pieces in row are the current_player's color or not
 # So if 4 in a row but not the curr_p's color --> lose, if it is the curr_p's color --> win
-def check_winner():
+def check_winner(player):
+    # check_winner(current_player)
+    
     # Hotdog
-    for i in range(BOARD_ROWS):
-        for j in range(BOARD_COLS - 3):
-            if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] != '':
-                return True
+    if player == name.get():
+        for i in range(BOARD_ROWS):
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] == scolor:
+                    return True
 
-    # Hamburger
-    for j in range(BOARD_COLS):
+        # Hamburger
+        for j in range(BOARD_COLS):
+            for i in range(BOARD_ROWS - 3):
+                if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] == scolor:
+                    return True
+
+        # Diagonal1
         for i in range(BOARD_ROWS - 3):
-            if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] != '':
-                return True
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] == scolor:
+                    return True
 
-    # Diagonal1
-    for i in range(BOARD_ROWS - 3):
-        for j in range(BOARD_COLS - 3):
-            if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] != '':
-                return True
+        # Diagonal2
+        for i in range(3, BOARD_ROWS):
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] == scolor:
+                    return True
+                
+        return False
+    
+    elif player == "Computer":
+        for i in range(BOARD_ROWS):
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] == ocolor:
+                    return True
 
-    # Diagonal2
-    for i in range(3, BOARD_ROWS):
-        for j in range(BOARD_COLS - 3):
-            if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] != '':
-                return True
-            
-    return False
+        # Hamburger
+        for j in range(BOARD_COLS):
+            for i in range(BOARD_ROWS - 3):
+                if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] == ocolor:
+                    return True
+
+        # Diagonal1
+        for i in range(BOARD_ROWS - 3):
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] == ocolor:
+                    return True
+
+        # Diagonal2
+        for i in range(3, BOARD_ROWS):
+            for j in range(BOARD_COLS - 3):
+                if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] == ocolor:
+                    return True
+                
+        return False
     
 
 
