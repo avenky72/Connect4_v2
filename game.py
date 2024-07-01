@@ -92,7 +92,7 @@ def draw_game():
 
 
 #might need to change up a lot of current functions
-def minimax(event, canvas, board, depth, alpha, beta, player):
+def minimax(event, canvas, depth, alpha, beta, max_player):
     #global current_player
     x = event.x
     y = event.y
@@ -106,15 +106,39 @@ def minimax(event, canvas, board, depth, alpha, beta, player):
     elif draw_game():
         return 0
     
-    if current_player == "Computer":
+    if max_player == True:
         best_score = float('-inf')
         #find a way to loop through each empty space in board
         # this is going to have to be re-written as a nested for loop or smt
         for cell in board and cell == '':
-            board[row][col] = current_player
+            board[cell] = current_player
+            #draw_token(canvas, row, col)
+            make_move(event, canvas)
+            score = minimax(event, canvas, depth + 1, alpha, beta, False)
+            board[cell] = ''
+            best_score = max(best_score, score)
+            alpha = max(alpha, best_score)
+            if beta <= alpha:
+                break
+        return best_score
+    
+    else:
+        best_score = float('inf')
+        #find a way to loop through each empty space in board
+        # this is going to have to be re-written as a nested for loop or smt
+        for cell in board and cell == '':
+            board[cell] = name.get()
             draw_token(canvas, row, col)
             make_move(event, canvas)
-            score = minimax(event, depth + 1, alpha, beta, False)
+            score = minimax(event, canvas, depth + 1, alpha, beta, True)
+            board[cell] = ''
+            best_score = min(best_score, score)
+            beta = min(beta, best_score)
+            if beta <= alpha:
+                break
+        return best_score
+            
+        
             
     
     return None
