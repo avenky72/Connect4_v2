@@ -66,7 +66,7 @@ def make_move(event, canvas):
         if board[r][col] == '':
             board[r][col] = name.get() if current_player != name.get() else "Computer"
             draw_token(canvas, r, col)
-            if check_winner():
+            if check_winner(current_player):
                 winner()
                 return
             elif draw_game():
@@ -97,12 +97,12 @@ def draw_game():
 
 
 #might need to change up a lot of current functions
-def minimax(event, canvas, depth, alpha, beta, max_player):
+def minimax(board, depth, alpha, beta, max_player):
     #global current_player
-    x = event.x
-    y = event.y
-    col = x // cells
-    row = y // cells
+    #x = event.x
+    #y = event.y
+    #col = x // cells
+    #row = y // cells
     if check_winner("Computer") == True:
         return 1
     # Doesn't make sense since the current player will be the computer
@@ -115,32 +115,34 @@ def minimax(event, canvas, depth, alpha, beta, max_player):
         best_score = float('-inf')
         #find a way to loop through each empty space in board
         # this is going to have to be re-written as a nested for loop or smt
-        for cell in board and cell == '':
-            board[cell] = current_player
-            #draw_token(canvas, row, col)
-            make_move(event, canvas)
-            score = minimax(event, canvas, depth + 1, alpha, beta, False)
-            board[cell] = ''
-            best_score = max(best_score, score)
-            alpha = max(alpha, best_score)
-            if beta <= alpha:
-                break
+        for col in range(BOARD_COLS):
+            for row in range(BOARD_ROWS - 1, -1, -1):
+                board[row][col] = "Computer"
+                #draw_token(canvas, row, col)
+                #make_move(event, canvas)
+                score = minimax(board, depth + 1, alpha, beta, False)
+                board[row][col] = ''
+                best_score = max(best_score, score)
+                alpha = max(alpha, best_score)
+                if beta <= alpha:
+                    break
         return best_score
     
     else:
         best_score = float('inf')
         #find a way to loop through each empty space in board
         # this is going to have to be re-written as a nested for loop or smt
-        for cell in board and cell == '':
-            board[cell] = name.get()
-            draw_token(canvas, row, col)
-            make_move(event, canvas)
-            score = minimax(event, canvas, depth + 1, alpha, beta, True)
-            board[cell] = ''
-            best_score = min(best_score, score)
-            beta = min(beta, best_score)
-            if beta <= alpha:
-                break
+        for col in range(BOARD_COLS):
+            for row in range(BOARD_ROWS - 1, -1, -1):
+                board[row][col] = name.get()
+                #draw_token(canvas, row, col)
+                #make_move(event, canvas)
+                score = minimax(board, depth + 1, alpha, beta, True)
+                board[row][col] = ''
+                best_score = min(best_score, score)
+                beta = min(beta, best_score)
+                if beta <= alpha:
+                    break
         return best_score
 
 
