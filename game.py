@@ -89,7 +89,7 @@ def save_name():
 
 
 def draw_game():
-    if not any('' in row for row in board) and not check_winner():
+    if not any('' in row for row in board) and not check_winner(current_player):
         return True
     return False
 
@@ -98,11 +98,6 @@ def draw_game():
 
 #might need to change up a lot of current functions
 def minimax(board, depth, alpha, beta, max_player):
-    #global current_player
-    #x = event.x
-    #y = event.y
-    #col = x // cells
-    #row = y // cells
     if check_winner("Computer") == True:
         return 1
     # Doesn't make sense since the current player will be the computer
@@ -117,15 +112,16 @@ def minimax(board, depth, alpha, beta, max_player):
         # this is going to have to be re-written as a nested for loop or smt
         for col in range(BOARD_COLS):
             for row in range(BOARD_ROWS - 1, -1, -1):
-                board[row][col] = "Computer"
-                #draw_token(canvas, row, col)
-                #make_move(event, canvas)
-                score = minimax(board, depth + 1, alpha, beta, False)
-                board[row][col] = ''
-                best_score = max(best_score, score)
-                alpha = max(alpha, best_score)
-                if beta <= alpha:
-                    break
+                if board[row][col] == '':
+                    board[row][col] = "Computer"
+                    #draw_token(canvas, row, col)
+                    #make_move(event, canvas)
+                    score = minimax(board, depth + 1, alpha, beta, False)
+                    board[row][col] = ''
+                    best_score = max(best_score, score)
+                    alpha = max(alpha, best_score)
+                    if beta <= alpha:
+                        break
         return best_score
     
     else:
@@ -134,16 +130,19 @@ def minimax(board, depth, alpha, beta, max_player):
         # this is going to have to be re-written as a nested for loop or smt
         for col in range(BOARD_COLS):
             for row in range(BOARD_ROWS - 1, -1, -1):
-                board[row][col] = name.get()
-                #draw_token(canvas, row, col)
-                #make_move(event, canvas)
-                score = minimax(board, depth + 1, alpha, beta, True)
-                board[row][col] = ''
-                best_score = min(best_score, score)
-                beta = min(beta, best_score)
-                if beta <= alpha:
-                    break
+                if board[row][col] == '':
+                    board[row][col] = name.get()
+                    #draw_token(canvas, row, col)
+                    #make_move(event, canvas)
+                    score = minimax(board, depth + 1, alpha, beta, True)
+                    board[row][col] = ''
+                    best_score = min(best_score, score)
+                    beta = min(beta, best_score)
+                    if beta <= alpha:
+                        break
         return best_score
+    
+
 
 
 """
@@ -185,58 +184,33 @@ def minimax(event, canvas, board, depth, alpha, beta):
 def check_winner(player):
     # check_winner(current_player)
     
+    color = scolor if player == name.get() else ocolor
+
     # Hotdog
-    if player == name.get():
-        for i in range(BOARD_ROWS):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] == scolor:
-                    return True
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS - 3):
+            if board[row][col] == board[row][col + 1] == board[row][col + 2] == board[row][col + 3] == color:
+                return True
 
-        # Hamburger
-        for j in range(BOARD_COLS):
-            for i in range(BOARD_ROWS - 3):
-                if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] == scolor:
-                    return True
+    # Hamburger
+    for col in range(BOARD_COLS):
+        for row in range(BOARD_ROWS - 3):
+            if board[row][col] == board[row + 1][col] == board[row + 2][col] == board[row + 3][col] == color:
+                return True
 
-        # Diagonal1
-        for i in range(BOARD_ROWS - 3):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] == scolor:
-                    return True
+    # Diagonal Checks
+    for row in range(BOARD_ROWS - 3):
+        for col in range(BOARD_COLS - 3):
+            if board[row][col] == board[row + 1][col + 1] == board[row + 2][col + 2] == board[row + 3][col + 3] == color:
+                return True
 
-        # Diagonal2
-        for i in range(3, BOARD_ROWS):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] == scolor:
-                    return True
-                
-        return False
-    
-    elif player == "Computer":
-        for i in range(BOARD_ROWS):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i][j + 1] == board[i][j + 2] == board[i][j + 3] == ocolor:
-                    return True
+    for row in range(3, BOARD_ROWS):
+        for col in range(BOARD_COLS - 3):
+            if board[row][col] == board[row - 1][col + 1] == board[row - 2][col + 2] == board[row - 3][col + 3] == color:
+                return True
 
-        # Hamburger
-        for j in range(BOARD_COLS):
-            for i in range(BOARD_ROWS - 3):
-                if board[i][j] == board[i + 1][j] == board[i + 2][j] == board[i + 3][j] == ocolor:
-                    return True
+    return False
 
-        # Diagonal1
-        for i in range(BOARD_ROWS - 3):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] == ocolor:
-                    return True
-
-        # Diagonal2
-        for i in range(3, BOARD_ROWS):
-            for j in range(BOARD_COLS - 3):
-                if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2] == board[i - 3][j + 3] == ocolor:
-                    return True
-                
-        return False
     
 
 
