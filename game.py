@@ -64,7 +64,7 @@ def make_move(event, canvas):
 
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
-            board[r][col] = current_player
+            board[r][col] = name.get() if current_player != name.get() else "Computer"
             draw_token(canvas, r, col)
             if check_winner():
                 winner()
@@ -72,7 +72,12 @@ def make_move(event, canvas):
             elif draw_game():
                 draw()
                 return
-            current_player = name.get() if current_player != name.get() else 'Computer'
+            else:
+                current_player = "Computer" if current_player == name.get() else name.get()
+                if current_player == "Computer":
+                    minimax_move = minimax(board, 0, float('-inf'), float('inf'), True)
+                    make_move(minimax_move, canvas)
+                
             break
     
 
@@ -137,11 +142,7 @@ def minimax(event, canvas, depth, alpha, beta, max_player):
             if beta <= alpha:
                 break
         return best_score
-            
-        
-            
-    
-    return None
+
 
 """
 might need to change up a lot of current functions
