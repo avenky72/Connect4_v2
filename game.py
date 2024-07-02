@@ -63,7 +63,7 @@ def make_move(event, canvas):
 
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
-            board[r][col] = name.get() if current_player != name.get() else "Computer"
+            board[r][col] = current_player
             draw_token(canvas, r, col)
             if check_winner(current_player):
                 winner()
@@ -97,19 +97,19 @@ def draw_game():
 
 #might need to change up a lot of current functions
 def minimax(board, depth, alpha, beta, max_player):
-    if check_winner("Computer") == True:
+    if check_winner("Computer"):
         return 1
-    # Doesn't make sense since the current player will be the computer
-    elif check_winner(name.get()) == True:
+    elif check_winner(name.get()):
         return -1
     elif draw_game():
         return 0
     
     if max_player == True:
         best_score = float('-inf')
-        #find a way to loop through each empty space in board
+        # find a way to loop through each empty space in board
         # this is going to have to be re-written as a nested for loop or smt
         for col in range(BOARD_COLS):
+            # start from bottom
             for row in range(BOARD_ROWS - 1, -1, -1):
                 if board[row][col] == '':
                     board[row][col] = "Computer"
