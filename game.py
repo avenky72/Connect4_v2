@@ -74,10 +74,16 @@ def make_move(event, canvas):
             else:
                 current_player = "Computer" if current_player == name.get() else name.get()
                 if current_player == "Computer":
-                    minimax_move = minimax(board, 0, float('-inf'), float('inf'), True)
-                    make_move(minimax_move, canvas)
+                    comp_move = best_move(board)
+                    if comp_move != None:
+                        board[r][col] = "Computer"
+                        score = minimax(board, 0, float('-inf'), float('inf'), False)
+                        board[r][col] = ''
+                        if score > best_score:
+                            best_score = score
+                            best_col = col
+    return best_col
                 
-            break
     
 
 
@@ -142,6 +148,22 @@ def minimax(board, depth, alpha, beta, max_player):
         return best_score
     
 
+
+
+# loop through all cols and find empty cells and do minimax() and get that score, return the best score
+def best_move(board):
+    best_score = float('-inf')
+    best = None
+    for col in range(BOARD_COLS):
+        for row in range(BOARD_ROWS):
+            if board[row][col] == '':
+                board[row][col] = "Computer"
+                score = minimax(board, 0, float('-inf'), float('inf'), False)
+                board[row][col] = ''
+                if score > best_score:
+                    best_score = score
+                    best = col
+    return best
 
 
 """
