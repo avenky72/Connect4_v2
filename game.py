@@ -7,6 +7,8 @@ BOARD_COLS = 7
 cells = 70
 canvas_width = cells * BOARD_COLS
 canvas_height = cells * BOARD_ROWS
+MAX_DEPTH = 3
+
 
 root = tk.Tk()
 root.title("Connect 4")
@@ -53,19 +55,17 @@ def draw_token(canvas, row, col):
 
 
 
-
-
 def make_move(event, canvas):
     global current_player
     x = event.x
-    #y = event.y
     col = x // cells
-    #row = y // cells
-"""
+    print(f"Player clicked column {col}")
+
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
             draw_token(canvas, r, col)
+            canvas.update()  # Ensure the canvas updates immediately
             if check_winner(current_player):
                 winner()
                 return
@@ -73,15 +73,16 @@ def make_move(event, canvas):
                 draw()
                 return
             else:
-                
                 current_player = "Computer" if current_player == name.get() else name.get()
                 if current_player == "Computer":
                     comp_move = best_move(board)
                     if comp_move is not None:
+                        print(f"Computer chooses column {comp_move}")
                         for r in range(BOARD_ROWS - 1, -1, -1):
                             if board[r][comp_move] == '':
                                 board[r][comp_move] = "Computer"
                                 draw_token(canvas, r, comp_move)
+                                canvas.update()  
                                 if check_winner("Computer"):
                                     winner()
                                     return
@@ -91,10 +92,10 @@ def make_move(event, canvas):
                                 current_player = name.get()
                                 break
             break
-            """
+          
     # having the computer choose a random move instead of minimax since minimax seems to be the issue
     # test to make sure everything other than minimax works
-def make_move(event, canvas):
+def make_move_random(event, canvas):
     global current_player
     x = event.x
     col = x // cells
@@ -162,7 +163,7 @@ def minimax(board, depth, alpha, beta, max_player):
         return 1
     elif check_winner(name.get()):
         return -1
-    elif draw_game():
+    elif draw_game() or depth == MAX_DEPTH:
         return 0
     
     if max_player == True:
@@ -270,16 +271,16 @@ color_label = tk.Label(root, text="Choose what color you wish to play as: \n The
 color_label.pack(padx=10, pady=10)
 
 
-lavender_button = tk.Button(root, font=('arial', 15, 'bold'), text="Lavender", bg="black", fg="purple", command=lambda: set_color("plum1"))
+lavender_button = tk.Button(root, font=('arial', 15, 'bold'), text="Lavender", bg="black", fg="purple", command=lambda: set_color("purple"))
 lavender_button.pack(padx=5, pady=5)
 
-blue_button = tk.Button(root, font=('arial', 15, 'bold'), text="Blue", bg="black", fg="blue", command=lambda: set_color("turquoise"))
+blue_button = tk.Button(root, font=('arial', 15, 'bold'), text="Blue", bg="black", fg="blue", command=lambda: set_color("blue"))
 blue_button.pack(padx=5, pady=5)
 
-pink_button = tk.Button(root, font=('arial', 15, 'bold'), text="Pink", bg="black", fg="red", command=lambda: set_color("pink"))
+pink_button = tk.Button(root, font=('arial', 15, 'bold'), text="Pink", bg="black", fg="red", command=lambda: set_color("red"))
 pink_button.pack(padx=5, pady=5)
 
-white_button = tk.Button(root, font=('arial', 15, 'bold'), text="White", bg="black", fg="black", command=lambda: set_color("white"))
+white_button = tk.Button(root, font=('arial', 15, 'bold'), text="White", bg="black", fg="black", command=lambda: set_color("black"))
 white_button.pack(padx=5, pady=5)
 
 start_button = tk.Button(root, font=('arial', 15, 'bold'), text="Start Game", bg="black", fg="green", command=start_game)
