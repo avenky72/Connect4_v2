@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import random
 
 BOARD_ROWS = 6
 BOARD_COLS = 7
@@ -60,7 +61,7 @@ def make_move(event, canvas):
     #y = event.y
     col = x // cells
     #row = y // cells
-
+"""
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
@@ -72,19 +73,73 @@ def make_move(event, canvas):
                 draw()
                 return
             else:
+                
                 current_player = "Computer" if current_player == name.get() else name.get()
                 if current_player == "Computer":
                     comp_move = best_move(board)
-                    if comp_move != None:
-                        board[r][col] = "Computer"
-                        score = minimax(board, 0, float('-inf'), float('inf'), False)
-                        board[r][col] = ''
-                        if score > best_score:
-                            best_score = score
-                            best_col = col
-    return best_col
-                
-    
+                    if comp_move is not None:
+                        for r in range(BOARD_ROWS - 1, -1, -1):
+                            if board[r][comp_move] == '':
+                                board[r][comp_move] = "Computer"
+                                draw_token(canvas, r, comp_move)
+                                if check_winner("Computer"):
+                                    winner()
+                                    return
+                                elif draw_game():
+                                    draw()
+                                    return
+                                current_player = name.get()
+                                break
+            break
+            """
+    # having the computer choose a random move instead of minimax since minimax seems to be the issue
+    # test to make sure everything other than minimax works
+def make_move(event, canvas):
+    global current_player
+    x = event.x
+    col = x // cells
+
+    for r in range(BOARD_ROWS - 1, -1, -1):
+        if board[r][col] == '':
+            board[r][col] = current_player
+            draw_token(canvas, r, col)
+            canvas.update() 
+            if check_winner(current_player):
+                winner()
+                return
+            elif draw_game():
+                draw()
+                return
+            else:
+                current_player = "Computer" if current_player == name.get() else name.get()
+                if current_player == "Computer":
+                    comp_move = rando_move(board)
+                    if comp_move is not None:
+                        print(f"Computer chooses column {comp_move}")
+                        for r in range(BOARD_ROWS - 1, -1, -1):
+                            if board[r][comp_move] == '':
+                                board[r][comp_move] = "Computer"
+                                draw_token(canvas, r, comp_move)
+                                canvas.update()  # Ensure the canvas updates immediately
+                                if check_winner("Computer"):
+                                    winner()
+                                    return
+                                elif draw_game():
+                                    draw()
+                                    return
+                                current_player = name.get()
+                                break
+            break
+
+
+# random move generator for comp
+def rando_move(board):
+    rando = [col for col in range(BOARD_COLS) if board[0][col] == '']
+    if rando:
+        return random.choice(rando)
+    return None
+
+
 
 
 def save_name():
@@ -164,36 +219,6 @@ def best_move(board):
                     best_score = score
                     best = col
     return best
-
-
-"""
-might need to change up a lot of current functions
-def minimax(event, canvas, board, depth, alpha, beta):
-    #global current_player
-    x = event.x
-    y = event.y
-    col = x // cells
-    row = y // cells
-    if current_player == "Computer" and check_winner() == True:
-        return 1
-    # Doesn't make sense since the current player will be the computer
-    elif current_player == name.get() and check_winner() == True:
-        return -1
-    elif draw_game():
-        return 0
-    
-    if current_player == "Computer":
-        best_score = float('-inf')
-        #find a way to loop through each empty space in board
-        # this is going to have to be re-written as a nested for loop or smt
-        for cell in board and cell == '':
-            board[row][col] = current_player
-            draw_token(canvas, row, col)
-            make_move(event, canvas)
-            score = minimax(event, depth + 1, alpha, beta, False)
-            
-    
-    return None"""
 
 
 
