@@ -228,31 +228,28 @@ def best_move(board):
 # Do this by checking if the pieces in row are the current_player's color or not
 # So if 4 in a row but not the curr_p's color --> lose, if it is the curr_p's color --> win
 def check_winner(player):
-    # check_winner(current_player)
-    
-    color = scolor if player == name.get() else ocolor
-
     # Hotdog
     for row in range(BOARD_ROWS):
         for col in range(BOARD_COLS - 3):
-            if board[row][col] == board[row][col + 1] == board[row][col + 2] == board[row][col + 3] == color:
+            if board[row][col] == player and board[row][col + 1] == player and board[row][col + 2] == player and board[row][col + 3] == player:
                 return True
 
     # Hamburger
     for col in range(BOARD_COLS):
         for row in range(BOARD_ROWS - 3):
-            if board[row][col] == board[row + 1][col] == board[row + 2][col] == board[row + 3][col] == color:
+            if board[row][col] == player and board[row + 1][col] == player and board[row + 2][col] == player and board[row + 3][col] == player:
                 return True
 
-    # Diagonal Checks
+    # Diagonal 1
     for row in range(BOARD_ROWS - 3):
         for col in range(BOARD_COLS - 3):
-            if board[row][col] == board[row + 1][col + 1] == board[row + 2][col + 2] == board[row + 3][col + 3] == color:
+            if board[row][col] == player and board[row + 1][col + 1] == player and board[row + 2][col + 2] == player and board[row + 3][col + 3] == player:
                 return True
 
+    # Diagonal 2
     for row in range(3, BOARD_ROWS):
         for col in range(BOARD_COLS - 3):
-            if board[row][col] == board[row - 1][col + 1] == board[row - 2][col + 2] == board[row - 3][col + 3] == color:
+            if board[row][col] == player and board[row - 1][col + 1] == player and board[row - 2][col + 2] == player and board[row - 3][col + 3] == player:
                 return True
 
     return False
