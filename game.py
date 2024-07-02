@@ -47,10 +47,9 @@ def set_color(color):
 def draw_token(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
-    if current_player == name.get():
-        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=scolor, width=5)
-    else:
-        canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=ocolor, width=5)
+    color = scolor if board[row][col] == name.get() else ocolor
+    canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=color, width=5)
+
 
 
 
@@ -89,9 +88,9 @@ def save_name():
 
 
 def draw_game():
-    if not any('' in row for row in board) and not check_winner(current_player):
-        return True
-    return False
+    return all(board[r][c] != '' for r in range(BOARD_ROWS) for c in range(BOARD_COLS))
+    #    return True
+    #return False
 
 
 
