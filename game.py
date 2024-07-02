@@ -59,13 +59,12 @@ def make_move(event, canvas):
     global current_player
     x = event.x
     col = x // cells
-    print(f"Player clicked column {col}")
 
     for r in range(BOARD_ROWS - 1, -1, -1):
         if board[r][col] == '':
             board[r][col] = current_player
             draw_token(canvas, r, col)
-            canvas.update()  # Ensure the canvas updates immediately
+            canvas.update()  
             if check_winner(current_player):
                 winner()
                 return
@@ -77,7 +76,6 @@ def make_move(event, canvas):
                 if current_player == "Computer":
                     comp_move = best_move(board)
                     if comp_move is not None:
-                        print(f"Computer chooses column {comp_move}")
                         for r in range(BOARD_ROWS - 1, -1, -1):
                             if board[r][comp_move] == '':
                                 board[r][comp_move] = "Computer"
@@ -116,12 +114,11 @@ def make_move_random(event, canvas):
                 if current_player == "Computer":
                     comp_move = rando_move(board)
                     if comp_move is not None:
-                        print(f"Computer chooses column {comp_move}")
                         for r in range(BOARD_ROWS - 1, -1, -1):
                             if board[r][comp_move] == '':
                                 board[r][comp_move] = "Computer"
                                 draw_token(canvas, r, comp_move)
-                                canvas.update()  # Ensure the canvas updates immediately
+                                canvas.update()  
                                 if check_winner("Computer"):
                                     winner()
                                     return
