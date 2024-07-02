@@ -7,7 +7,7 @@ BOARD_COLS = 7
 cells = 70
 canvas_width = cells * BOARD_COLS
 canvas_height = cells * BOARD_ROWS
-MAX_DEPTH = 3
+MAX_DEPTH = 4
 
 
 root = tk.Tk()
@@ -28,7 +28,7 @@ board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 def start_game():
     global current_player, scolor
     save_name()
-    current_player = name.get()  # Set the current player to the player's name
+    current_player = name.get()  
     for widget in root.winfo_children():
         widget.destroy()
     draw_board()
@@ -47,11 +47,16 @@ def set_color(color):
 
 
 
+
+
 def draw_token(canvas, row, col):
     x_center = col * cells + cells // 2
     y_center = row * cells + cells // 2
     color = scolor if board[row][col] == name.get() else ocolor
     canvas.create_oval(x_center - 20, y_center - 20, x_center + 20, y_center + 20, outline=color, width=5)
+
+
+
 
 
 
@@ -90,7 +95,10 @@ def make_move(event, canvas):
                                 current_player = name.get()
                                 break
             break
-          
+        
+
+
+
     # having the computer choose a random move instead of minimax since minimax seems to be the issue
     # test to make sure everything other than minimax works
 def make_move_random(event, canvas):
@@ -118,7 +126,7 @@ def make_move_random(event, canvas):
                             if board[r][comp_move] == '':
                                 board[r][comp_move] = "Computer"
                                 draw_token(canvas, r, comp_move)
-                                canvas.update()  
+                                #canvas.update()  
                                 if check_winner("Computer"):
                                     winner()
                                     return
